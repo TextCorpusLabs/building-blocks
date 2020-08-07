@@ -44,13 +44,19 @@ def aggregate_files(path_in: pathlib.Path, path_out: pathlib.Path) -> None:
 def __add_document_to_block(file_in_name: pathlib.Path, path_out: pathlib.Path, block: int) -> int:
     with open(file_in_name, 'r', encoding = 'utf-8') as file_stream:
         lines = file_stream.readlines()
-
+    
+    mode = 'w'
+    header = ['', f'--------- {file_in_name.name} ---------', '\n\n']
     file_out_name = path_out.joinpath(f'./block.{block:05}.txt')
-    mode = 'a' if file_out_name.exists() else 'w'
+    if file_out_name.exists():
+        mode = 'a'
+        header[0] = '\n'
+    
     with open(file_out_name, mode, encoding = 'utf-8') as file_stream:
+        file_stream.writelines(header)
         file_stream.writelines(lines)    
 
-    return len(lines)
+    return len(lines) + 3
 
 if __name__ == '__main__':
     parser = ArgumentParser()
