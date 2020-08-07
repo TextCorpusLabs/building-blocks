@@ -1,0 +1,5 @@
+# IDE/tools
+.vscode/
+__pycache__
+.pytest_cache
+*.bak
