@@ -23,3 +23,4 @@ The list of current scripts is below.
 **Formatting**
 
 1. [aggregate-files](./docs/aggregate-files.md)
+2. [corpus-to-json](./docs/corpus-to-json.md)
