@@ -11,4 +11,4 @@ This has the added benefit over [aggregate-files](./aggregate-files.md) in that 
 ## Run the script
 
 The script is run in a similar manor to the [general form](../README.md#scripts).
-Run `python corpus-to-json.py -in d:/corpus_in -out d:/corpus.json` where `corpus_in` is a folder and `corpus.json` will be overwritten.
+Run `python corpus-to-json.py -in d:/corpus_in -out d:/corpus.jsonl` where `corpus_in` is a folder and `corpus.jsonl` will be overwritten.
