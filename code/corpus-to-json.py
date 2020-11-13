@@ -1,8 +1,9 @@
 import pathlib
 import jsonlines as jl
-import multiprocessing as mp
+import pattern as pat
 import progressbar as pb
 import typing as t
+import utils as u
 from argparse import ArgumentParser
 from threading import Thread
 from typeguard import typechecked
@@ -25,62 +26,19 @@ def corpus_to_json(folder_in: pathlib.Path, jsonl_out: pathlib.Path) -> None:
     if jsonl_out.exists():
         jsonl_out.unlink()
 
-    tasks = mp.Queue()
-    results = mp.Queue()
+    worker = pat.MultiWorker(_txt_file_to_json)
+    worker.start()
+    _collect_files(folder_in, worker)
+    _save_to_jsonl(worker, jsonl_out)
 
-    _start_workers(tasks, results)
-    _collect_files(folder_in, tasks)
-    _save_json(results, jsonl_out)
-
-@typechecked
-def _start_workers(tasks: mp.Queue, results: mp.Queue) -> None:
-    workers = []
-    for _ in range(mp.cpu_count()):
-        worker = mp.Process(target = _worker, args = (tasks, results))
-        worker.start()
-        workers.append(worker)
-    overlord = Thread(target = _overlord, args = (workers, tasks, results))
-    overlord.start()
-
-def _overlord(workers: t.List[mp.Process], tasks: mp.Queue, results: mp.Queue) -> None:
-    for worker in workers:
-        worker.join()
-    results.put(_sentinel)
-    tasks.close()
+    i = 1
 
 @typechecked
-def _worker(tasks: mp.Queue, results: mp.Queue) -> None:
-    while True:
-        item = tasks.get()
-        if item == _sentinel:
-            tasks.put(_sentinel)
-            break            
-        else:
-            result = _txt_file_to_json(item)
-            results.put(result)
-
-@typechecked
-def _collect_files(folder_in: pathlib.Path, tasks: mp.Queue) -> None:
+def _collect_files(folder_in: pathlib.Path, worker: pat.MultiWorker) -> None:
     for file_name in folder_in.iterdir():
-        if file_name.suffix == '.txt':
-            tasks.put(str(file_name))
-    tasks.put(_sentinel)
-
-@typechecked
-def _save_json(results: mp.Queue, jsonl_out: pathlib.Path) -> None:
-    bar_i = 0
-    widgets = [ 'Aggregating Document # ', pb.Counter(), ' ', pb.Timer(), ' ', pb.BouncingBar(marker = '.', left = '[', right = ']')]
-    with pb.ProgressBar(widgets = widgets) as bar:
-        with open(jsonl_out, 'w', encoding = 'utf-8') as fp:
-            with jl.Writer(fp, compact = True, sort_keys = True) as writer:
-                while True:
-                    bar.update(bar_i)
-                    bar_i = bar_i + 1
-                    json = results.get()
-                    if json == _sentinel:
-                        break
-                    else:                        
-                        writer.write(json)
+        if u.is_corpus_document(file_name):
+            worker.add_task(str(file_name))
+    worker.finished_adding_tasks()
 
 @typechecked
 def _txt_file_to_json(file_name: str) -> dict:
@@ -90,6 +48,18 @@ def _txt_file_to_json(file_name: str) -> dict:
     lines = [line.strip() for line in lines]
     json = { 'file_name' : file_name.name, 'lines' : lines }
     return json
+
+@typechecked
+def _save_to_jsonl(worker: pat.MultiWorker, jsonl_out: pathlib.Path) -> None:
+    bar_i = 0
+    widgets = [ 'Aggregating Document # ', pb.Counter(), ' ', pb.Timer(), ' ', pb.BouncingBar(marker = '.', left = '[', right = ']')]
+    with pb.ProgressBar(widgets = widgets) as bar:
+        with open(jsonl_out, 'w', encoding = 'utf-8') as fp:
+            with jl.Writer(fp, compact = True, sort_keys = True) as writer:
+                for item in worker.get_results():
+                    bar_i = bar_i + 1
+                    bar.update(bar_i)                    
+                    writer.write(item)
 
 if __name__ == '__main__':
     parser = ArgumentParser()
