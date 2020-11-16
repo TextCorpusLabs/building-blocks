@@ -1,6 +1,6 @@
 import pathlib
 import jsonlines as jl
-import pattern as pat
+import mp_boilerplate as mpb
 import progressbar as pb
 import typing as t
 import utils as u
@@ -26,7 +26,7 @@ def corpus_to_json(folder_in: pathlib.Path, jsonl_out: pathlib.Path) -> None:
     if jsonl_out.exists():
         jsonl_out.unlink()
 
-    worker = pat.MultiWorker(_txt_file_to_json)
+    worker = mpb.MultiWorker(_txt_file_to_json)
     worker.start()
     _collect_files(folder_in, worker)
     _save_to_jsonl(worker, jsonl_out)
@@ -34,7 +34,7 @@ def corpus_to_json(folder_in: pathlib.Path, jsonl_out: pathlib.Path) -> None:
     i = 1
 
 @typechecked
-def _collect_files(folder_in: pathlib.Path, worker: pat.MultiWorker) -> None:
+def _collect_files(folder_in: pathlib.Path, worker: mpb.MultiWorker) -> None:
     for file_name in folder_in.iterdir():
         if u.is_corpus_document(file_name):
             worker.add_task(str(file_name))
@@ -50,11 +50,11 @@ def _txt_file_to_json(file_name: str) -> dict:
     return json
 
 @typechecked
-def _save_to_jsonl(worker: pat.MultiWorker, jsonl_out: pathlib.Path) -> None:
+def _save_to_jsonl(worker: mpb.MultiWorker, jsonl_out: pathlib.Path) -> None:
     bar_i = 0
     widgets = [ 'Aggregating Document # ', pb.Counter(), ' ', pb.Timer(), ' ', pb.BouncingBar(marker = '.', left = '[', right = ']')]
     with pb.ProgressBar(widgets = widgets) as bar:
-        with open(jsonl_out, 'w', encoding = 'utf-8') as fp:
+        with open(jsonl_out, 'w', encoding = 'utf-16') as fp:
             with jl.Writer(fp, compact = True, sort_keys = True) as writer:
                 for item in worker.get_results():
                     bar_i = bar_i + 1
