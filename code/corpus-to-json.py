@@ -46,7 +46,7 @@ def _txt_file_to_json(file_name: str) -> dict:
     with open(file_name, 'r', encoding = 'utf-8') as fp:
         lines = fp.readlines()
     lines = [line.strip() for line in lines]
-    json = { 'file_name' : file_name.name, 'lines' : lines }
+    json = { 'file_name' : file_name.name, 'text' : lines }
     return json
 
 @typechecked
