@@ -45,15 +45,11 @@ def _list_documents(jsonl_in: pathlib.Path) -> t.Iterator[dict]:
     jsonl_in : pathlib.Path
         The JSONL containing all the documents
     """
-    i = 0
     encoding = u.guess_encoding(jsonl_in)
     with open(jsonl_in, 'r', encoding = encoding) as fp:
         with jl.Reader(fp) as reader:
             for item in reader:
                 yield item
-                i = i + 1
-                if i >=50000:
-                    return
 
 @typechecked
 def _save_json_document(state:t.Tuple[str, str], document: dict) -> int:
