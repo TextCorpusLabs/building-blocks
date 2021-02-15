@@ -29,29 +29,13 @@ def jsonl_to_csv(jsonl_in: pathlib.Path, csv_out: pathlib.Path, extract: t.List[
         csv_out.unlink()
 
     worker = mpb.EPTS(
-        extract = _list_documents, extract_args = (jsonl_in),
+        extract = u._list_jsonl_documents, extract_args = (jsonl_in),
         transform = _extract_document, transform_init = _passthrough, transform_init_args = (extract),
         save = _save_documents, save_args = (csv_out, extract),
         worker_count = sub_process_count,
         show_progress = True)
     worker.start()
     worker.join()
-
-@typechecked
-def _list_documents(jsonl_in: pathlib.Path) -> t.Iterator[dict]:
-    """
-    Lists the documents in the `JSONL` file
-
-    Parameters
-    ----------
-    jsonl_in : pathlib.Path
-        The JSONL containing all the documents
-    """
-    encoding = u.guess_encoding(jsonl_in)
-    with open(jsonl_in, 'r', encoding = encoding) as fp:
-        with jl.Reader(fp) as reader:
-            for item in reader:
-                yield item
 
 @typechecked
 def _extract_document(state: t.List[str], document: dict) -> dict:

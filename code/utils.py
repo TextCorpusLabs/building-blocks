@@ -20,6 +20,22 @@ def guess_encoding(file_name: pathlib.Path) -> str:
         return "utf-8"
 
 @typechecked
+def _list_jsonl_documents(jsonl_in: pathlib.Path) -> t.Iterator[dict]:
+    """
+    Lists the documents in the `JSONL` file
+
+    Parameters
+    ----------
+    jsonl_in : pathlib.Path
+        The JSONL containing all the documents
+    """
+    encoding = guess_encoding(jsonl_in)
+    with open(jsonl_in, 'r', encoding = encoding) as fp:
+        with jl.Reader(fp) as reader:
+            for item in reader:
+                yield item
+
+@typechecked
 def csv_list(text: str) -> t.List[str]:
     """
     Converts a CSV string into its componet parts
