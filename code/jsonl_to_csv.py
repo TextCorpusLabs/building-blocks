@@ -1,7 +1,6 @@
 import csv
 import pathlib
 import json
-import jsonlines as jl
 import mp_boilerplate as mpb
 import typing as t
 import utils as u
@@ -61,7 +60,7 @@ def _extract_document(state: t.List[str], document: dict) -> dict:
                     if type(v1) == list:
                         value = ' '.join([' '.join(vn) for vn in value])
                     else:
-                        value = ' '.join(value)                
+                        value = ' '.join(value)
             result[elm] = value
     return result
 
