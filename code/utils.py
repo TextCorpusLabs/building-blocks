@@ -1,4 +1,5 @@
 import pathlib
+import typing as t
 from typeguard import typechecked
 
 @typechecked
@@ -17,3 +18,16 @@ def guess_encoding(file_name: pathlib.Path) -> str:
         return "utf-16"
     else:
         return "utf-8"
+
+@typechecked
+def csv_list(text: str) -> t.List[str]:
+    """
+    Converts a CSV string into its componet parts
+
+    Parameters
+    ----------
+    text : str
+        The CSV text
+    """
+    result = [item.strip() for item in text.split(',')]
+    return result
