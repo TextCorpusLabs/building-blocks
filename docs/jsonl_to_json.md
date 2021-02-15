@@ -13,7 +13,7 @@ The pathing can be changed by updating the parameters.
    * The `-in`/`-out` parameters control the source file and destination folder.
      If the output folder does not exist it is created.
      **WARNING**: If the output folder _does exist AND is not empty_, new `JSON` files will overwrite old ones.
-   * The `id` parameter is used to select the file name.
+   * The `-id` parameter is used to select the file name.
      I.E. `f'./{id}.json'`.
      If the `id` element can not be found the file will not be created.
      It defaults to 'id'.
