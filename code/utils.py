@@ -37,6 +37,20 @@ def list_jsonl_documents(jsonl_in: pathlib.Path) -> t.Iterator[dict]:
                 yield item
 
 @typechecked
+def list_folder_documents(folder_in: pathlib.Path, is_document: t.Callable[[pathlib.Path], bool]) -> t.Iterator[str]:
+    """
+    Lists the documents in the folder
+
+    Parameters
+    ----------
+    folder_in : pathlib.Path
+        The folder path containing all the documents
+    """
+    for file_name in folder_in.iterdir():
+        if is_document(file_name):
+            yield str(file_name)
+
+@typechecked
 def csv_list(text: str) -> t.List[str]:
     """
     Converts a CSV string into its componet parts

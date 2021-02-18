@@ -58,7 +58,7 @@ def _save_txt_document(state:t.Tuple[str, str, t.List[str]], document: dict) -> 
                     lines = _value_to_lines(document[elm])
                 else:
                     lines = _value_to_lines(None)
-                fp.writelines(lines + ['\n'])
+                fp.writelines(lines)
     return 0
 
 @typechecked
