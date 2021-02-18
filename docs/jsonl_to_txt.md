@@ -1,6 +1,6 @@
 # JSONL to TXT
 
-Converts a `JSONL` file into a folder of `TXT` files.
+Convert a `JSONL` file into a folder of `TXT` files.
 
 # Steps
 
