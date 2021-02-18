@@ -29,6 +29,6 @@ If there is an error in a run, remove the `-O`, capture the error, and submit an
 05. [Convert](./docs/txt_to_jsonl.md) a folder of `TXT` files into a single `JSONL` file.
 06. [Convert](./docs/jsonl_to_json.md) a `JSONL` file into a folder of `JSON` files.
 07. [Convert](./docs/jsonl_to_txt.md) a `JSONL` file into a folder of `TXT` files.
-08. (need 1)[Convert](./docs/jsonl_to_itxt.md) a `JSONL` into a folder of _interleaved_ `TXT` files.
+08. [Convert](./docs/jsonl_to_itxt.md) a `JSONL` into a folder of _interleaved_ `TXT` files.
 09. [Convert](./docs/jsonl_to_csv.md) a `JSONL` file into a `CSV`.
-10. [Extract](./docs/prune_jsonl.md) elments from a `JSONL` file making a _smaller_ `JSONL` file.
+10. [Extract](./docs/jsonl_to_jsonl.md) elments from a `JSONL` file making a _smaller_ `JSONL` file.

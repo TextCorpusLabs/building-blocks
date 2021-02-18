@@ -9,7 +9,7 @@ from argparse import ArgumentParser
 from typeguard import typechecked
 
 @typechecked
-def prune_jsonl(jsonl_in: pathlib.Path, jsonl_out: pathlib.Path, extract: t.List[str], sub_process_count: int) -> None:
+def jsonl_to_jsonl(jsonl_in: pathlib.Path, jsonl_out: pathlib.Path, extract: t.List[str], sub_process_count: int) -> None:
     """
     Extract elments from a `JSONL` file making a _smaller_ `JSONL` file.
 
@@ -106,4 +106,4 @@ if __name__ == '__main__':
     print(f'jsonl out: {args.jsonl_out}')
     print(f'extract: {args.extract}')
     print(f'sub process count: {args.sub_process_count}')
-    prune_jsonl(args.jsonl_in, args.jsonl_out, args.extract, args.sub_process_count)
+    jsonl_to_jsonl(args.jsonl_in, args.jsonl_out, args.extract, args.sub_process_count)
