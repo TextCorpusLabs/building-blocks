@@ -21,7 +21,7 @@ def guess_encoding(file_name: pathlib.Path) -> str:
         return "utf-8"
 
 @typechecked
-def _list_jsonl_documents(jsonl_in: pathlib.Path) -> t.Iterator[dict]:
+def list_jsonl_documents(jsonl_in: pathlib.Path) -> t.Iterator[dict]:
     """
     Lists the documents in the `JSONL` file
 

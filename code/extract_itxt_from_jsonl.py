@@ -7,9 +7,9 @@ from argparse import ArgumentParser
 from typeguard import typechecked
 
 @typechecked
-def jsonl_to_txt(jsonl_in: pathlib.Path, folder_out: pathlib.Path, id_element: str, extract: t.List[str], sub_process_count: int) -> None:
+def extract_itxt_from_jsonl(jsonl_in: pathlib.Path, folder_out: pathlib.Path, id_element: str, extract: t.List[str], sub_process_count: int) -> None:
     """
-    Converts a `JSONL` file into a folder of `TXT` files.
+    Extracts a folder of _interleaved_ `TXT` files from a `JSONL` file.
 
     Parameters
     ----------
@@ -28,16 +28,16 @@ def jsonl_to_txt(jsonl_in: pathlib.Path, folder_out: pathlib.Path, id_element: s
     folder_out.mkdir(parents = True, exist_ok = True)
 
     worker = mpb.EPTS(
-        extract = u._list_jsonl_documents, extract_args = (jsonl_in),
+        extract = u.list_jsonl_documents, extract_args = (jsonl_in),
         transform = _save_txt_document, transform_init = _passthrough, transform_init_args = (str(folder_out), id_element, extract),
-        save = _no_op,
+        save = _log_errors, save_args = (folder_out),
         worker_count = sub_process_count,
         show_progress = True)
     worker.start()
     worker.join()
 
 @typechecked
-def _save_txt_document(state:t.Tuple[str, str, t.List[str]], document: dict) -> int:
+def _save_txt_document(state:t.Tuple[str, str, t.List[str]], document: dict) -> t.Tuple[int, str]:
     """
     Saves the `TXT` document
 
@@ -51,15 +51,59 @@ def _save_txt_document(state:t.Tuple[str, str, t.List[str]], document: dict) -> 
         The document to be saved
     """
     if state[1] in document:
-        file_name = pathlib.Path(state[0]).joinpath(f'./{document[state[1]]}.txt')
-        with open(file_name, 'w', encoding = 'utf-8') as fp:
-            for elm in state[2]:
-                if elm in document:
-                    lines = _value_to_lines(document[elm])
-                else:
-                    lines = _value_to_lines(None)
-                fp.writelines(lines + ['\n'])
-    return 0
+        if _all_elements_present_as_list(document, state[2]):
+            values = _extract_flattened_lists(document, state[2])
+            if _all_lists_equal_lenght(values):
+                file_name = pathlib.Path(state[0]).joinpath(f'./{document[state[1]]}.txt')
+                with open(file_name, 'w', encoding = 'utf-8') as fp:
+                    for i in range(0, len(values[0])):
+                        tmp = [f'{vn[i]}\n' for vn in values]
+                        fp.writelines(tmp + ['\n'])
+                return (0, '')
+            else:
+                return (1, f'`List` elements different lengths in document : {document[state[1]]}')
+        else:
+            return (1, f'missing `List` elements in document : {document[state[1]]}')
+    else:
+        return (1, f'missing id: {state[1]}')
+
+@typechecked
+def _all_elements_present_as_list(document: dict, elements: t.List[str]) -> bool:
+    """
+    Checks to see if all the elements are in the document
+    """
+    for elm in elements:
+        if elm in document:
+            if type(document[elm]) != list:
+                return False
+        else:
+            return False
+    return True
+
+@typechecked
+def _extract_flattened_lists(document: dict, elements: t.List[str]) -> t.List[t.List[str]]:
+    """
+    Extracts known elements as flattened lists.
+    I.E. list -> list, list[list] -> list
+    """
+    result = [None] * len(elements)
+    for i in range(0, len(elements)):
+        value = document[elements[i]]
+        if type(value[0]) == list:
+            result[i] = [' '.join(vn) for vn in value]
+        else:
+            result[i] = value
+    return result
+
+@typechecked
+def _all_lists_equal_lenght(values: t.List[t.List[str]]) -> bool:
+    """
+    Tests to see if all the lengths of all the elements are the same
+    """
+    for vn in values:
+        if len(values[0]) != len(vn):
+            return False
+    return True        
 
 @typechecked
 def _value_to_lines(value: t.Any) -> t.List[str]:
@@ -87,13 +131,22 @@ def _passthrough(folder_out: str, id_element: str, extract: t.List[str]) -> t.Tu
     return result
 
 @typechecked
-def _no_op(completes: t.Iterator[int]) -> None:
+def _log_errors(results: t.Iterator[t.Tuple[int, str]], folder_out: pathlib.Path) -> None:
     """
-    Does nothing.
-    We are abusing the "transform" step to do all the writing
+    Logs the errors in the interleaving process
+
+    Parameters
+    ----------
+    results : iterator
+        The results of the transformation process
+    folder_out : pathlib.Path
+        The folder containing the results
     """
-    for _ in completes:
-        pass
+    file_name = folder_out.parent.joinpath(f'{folder_out.stem}.error.log')
+    with open(file_name, 'w', encoding = 'utf-8') as fp:
+        for result in results:
+            if result[0] != 0:
+                fp.write(f'{result[0]}: {result[1]}\n')
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -128,4 +181,4 @@ if __name__ == '__main__':
     print(f'id element: {args.id_element}')
     print(f'extract: {args.extract}')
     print(f'sub process count: {args.sub_process_count}')
-    jsonl_to_txt(args.jsonl_in, args.folder_out, args.id_element, args.extract, args.sub_process_count)
+    extract_itxt_from_jsonl(args.jsonl_in, args.folder_out, args.id_element, args.extract, args.sub_process_count)

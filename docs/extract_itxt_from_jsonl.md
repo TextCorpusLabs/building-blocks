@@ -1,8 +1,8 @@
 # JSONL to iTXT
 
-Converts a `JSONL` file into a folder of _interleaved_ `TXT` files.
+Extracts a folder of _interleaved_ `TXT` files from a `JSONL` file.
 
-The normal [JSONL to TXT](./jsonl_to_txt.md) prints all of one element then all of the next and so on.
+The normal [extract](./extract_txt_from_jsonl.md) prints all of one element then all of the next and so on.
 This script prints the _ith_ value from _each_ element before print the _i+1_ value.
 Therefore, this script is only valid on elements that are `List`s and are the same length.
 Any document that does not meet those two conditions is not created.
@@ -11,12 +11,12 @@ An _error.log_ file will be made of any offending documents.
 
 # Steps
 
-Below are the steps needed to run the _conversion_ process.
+Below are the steps needed to run the _extraction_ process.
 The pathing can be changed by updating the parameters.
 
 1. Clone this repository.
 2. Open a PowerShell window to the `~/code` directory.
-3. [Convert](../code/jsonl_to_txt.py) the `JSONL` file into a folder of `TXT` files.
+3. [Extract](../code/extract_itxt_from_jsonl.py) a folder of _interleaved_ `TXT` files from a `JSONL` file.
    * The `-in`/`-out` parameters control the source file and destination folder.
      If the output folder does not exist it is created.
      **WARNING**: If the output folder _does exist AND is not empty_, new `TXT` files will overwrite old ones.
@@ -31,5 +31,5 @@ The pathing can be changed by updating the parameters.
    * The optional `-spc` parameter allows for tuning on multi core machines.
      It defaults to 1.
    ```{ps1}
-   python jsonl_to_itxt.py -in d:/corpus.jsonl -out d:/separated_files -e text
+   python extract_itxt_from_jsonl.py -in d:/corpus.jsonl -out d:/separated_files -e text
    ```

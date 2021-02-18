@@ -8,9 +8,9 @@ from argparse import ArgumentParser
 from typeguard import typechecked
 
 @typechecked
-def jsonl_to_csv(jsonl_in: pathlib.Path, csv_out: pathlib.Path, extract: t.List[str], sub_process_count: int) -> None:
+def extract_csv_from_jsonl(jsonl_in: pathlib.Path, csv_out: pathlib.Path, extract: t.List[str], sub_process_count: int) -> None:
     """
-    Converts a `JSONL` file into a `CSV` file.
+    Extracts a `CSV` file from a `JSONL` file. 
 
     Parameters
     ----------
@@ -28,7 +28,7 @@ def jsonl_to_csv(jsonl_in: pathlib.Path, csv_out: pathlib.Path, extract: t.List[
         csv_out.unlink()
 
     worker = mpb.EPTS(
-        extract = u._list_jsonl_documents, extract_args = (jsonl_in),
+        extract = u.list_jsonl_documents, extract_args = (jsonl_in),
         transform = _extract_document, transform_init = _passthrough, transform_init_args = (extract),
         save = _save_documents, save_args = (csv_out, extract),
         worker_count = sub_process_count,
@@ -122,4 +122,4 @@ if __name__ == '__main__':
     print(f'csv out: {args.csv_out}')
     print(f'extract: {args.extract}')
     print(f'sub process count: {args.sub_process_count}')
-    jsonl_to_csv(args.jsonl_in, args.csv_out, args.extract, args.sub_process_count)
+    extract_csv_from_jsonl(args.jsonl_in, args.csv_out, args.extract, args.sub_process_count)
