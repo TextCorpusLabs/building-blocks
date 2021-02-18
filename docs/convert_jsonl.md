@@ -1,4 +1,4 @@
-# JSONL to JSON
+# JSONL to JSONL
 
 Convert a `JSONL` file into a _smaller_ `JSONL` file by keeping only some elements.
 

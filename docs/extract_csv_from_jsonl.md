@@ -1,4 +1,4 @@
-# JSONL to JSON
+# JSONL to CSV
 
 Extracts a `CSV` file from a `JSONL` file.
 
