@@ -9,9 +9,9 @@ from argparse import ArgumentParser
 from typeguard import typechecked
 
 @typechecked
-def jsonl_to_jsonl(jsonl_in: pathlib.Path, jsonl_out: pathlib.Path, extract: t.List[str], sub_process_count: int) -> None:
+def convert_jsonl(jsonl_in: pathlib.Path, jsonl_out: pathlib.Path, keep: t.List[str], sub_process_count: int) -> None:
     """
-    Extract elments from a `JSONL` file making a _smaller_ `JSONL` file.
+    Converts a `JSONL` file into a _smaller_ `JSONL` file by keeping only some elements.
 
     Parameters
     ----------
@@ -19,8 +19,8 @@ def jsonl_to_jsonl(jsonl_in: pathlib.Path, jsonl_out: pathlib.Path, extract: t.L
         The JSONL containing all the documents
     jsonl_out : pathlib.Path
         The JSONL file containing all the documents
-    extract : List[str]
-        The name(s) of the elements to extract
+    keep : List[str]
+        The name(s) of the elements to keep
     sub_process_count : int
         The number of sub processes used to transformation from in to out formats
     """
@@ -29,8 +29,8 @@ def jsonl_to_jsonl(jsonl_in: pathlib.Path, jsonl_out: pathlib.Path, extract: t.L
         jsonl_out.unlink()
 
     worker = mpb.EPTS(
-        extract = u._list_jsonl_documents, extract_args = (jsonl_in),
-        transform = _extract_document, transform_init = _passthrough, transform_init_args = (extract),
+        extract = u.list_jsonl_documents, extract_args = (jsonl_in),
+        transform = _convert_document, transform_init = _passthrough, transform_init_args = (keep),
         save = _save_documents, save_args = (jsonl_out),
         worker_count = sub_process_count,
         show_progress = True)
@@ -38,14 +38,14 @@ def jsonl_to_jsonl(jsonl_in: pathlib.Path, jsonl_out: pathlib.Path, extract: t.L
     worker.join()
 
 @typechecked
-def _extract_document(state: t.List[str], document: dict) -> dict:
+def _convert_document(state: t.List[str], document: dict) -> dict:
     """
-    Extracts parts of the document 
+    Converts parts of the document 
 
     Parameters
     ----------
     state : List[str]
-        The elements to extract
+        The elements to keep
     document : dict
         The document to be saved
     """
@@ -56,11 +56,11 @@ def _extract_document(state: t.List[str], document: dict) -> dict:
     return result
 
 @typechecked
-def _passthrough(extract: t.List[str]) -> t.List[str]:
+def _passthrough(keep: t.List[str]) -> t.List[str]:
     """
     Pass the state from the main thread to the single document processing function
     """
-    return extract
+    return keep
 
 @typechecked
 def _save_documents(documents: t.Iterator[dict], jsonl_out: pathlib.Path) -> None:
@@ -92,8 +92,8 @@ if __name__ == '__main__':
         type = pathlib.Path,
         required = True)
     parser.add_argument(
-        '-e', '--extract',
-        help = 'The name(s) of the elements to extract',
+        '-k', '--keep',
+        help = 'The name(s) of the elements to keep',
         type = u.csv_list,
         default = 'id')
     parser.add_argument(
@@ -104,6 +104,6 @@ if __name__ == '__main__':
     args = parser.parse_args()    
     print(f'jsonl in: {args.jsonl_in}')
     print(f'jsonl out: {args.jsonl_out}')
-    print(f'extract: {args.extract}')
+    print(f'keep: {args.keep}')
     print(f'sub process count: {args.sub_process_count}')
-    jsonl_to_jsonl(args.jsonl_in, args.jsonl_out, args.extract, args.sub_process_count)
+    convert_jsonl(args.jsonl_in, args.jsonl_out, args.keep, args.sub_process_count)

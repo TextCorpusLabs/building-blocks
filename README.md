@@ -24,7 +24,7 @@ If there is an error in a run, remove the `-O`, capture the error, and submit an
 
 01. [Combine](./docs/combine_json_to_jsonl.md) a folder of `JSON` files into a single `JSONL` file.
 02. [Combine](./docs/combine_txt_to_jsonl.md) a folder of `TXT` files into a single `JSONL` file.
-03. [Convert](./docs/convert_jsonl.md) elments from a `JSONL` file making a _smaller_ `JSONL` file.
+03. [Convert](./docs/convert_jsonl.md) a `JSONL` file into a _smaller_ `JSONL` file by keeping only some elements.
 04. [Convert](./docs/convert_txtf.md) a folder of `TXT` files into a folder of _bigger_ `TXT` files.
 05. [Extract](./docs/extract_csv_from_jsonl.md) a `CSV` file from a `JSONL` file.
 06. [Extract](./docs/extract_itxt_from_jsonl.md) a folder of _interleaved_ `TXT` files from a `JSONL` file.
