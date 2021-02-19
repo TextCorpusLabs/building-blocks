@@ -62,3 +62,15 @@ def csv_list(text: str) -> t.List[str]:
     """
     result = [item.strip() for item in text.split(',')]
     return result
+
+
+@typechecked
+def is_txt_document(file_path: pathlib.Path) -> bool:
+    """
+    Determins if the file should be included in the processing
+    """
+    result = \
+        file_path.is_file() and \
+        file_path.suffix.lower() == '.txt' and \
+        not file_path.stem.startswith('_')
+    return result

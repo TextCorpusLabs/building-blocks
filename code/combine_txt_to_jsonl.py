@@ -25,24 +25,13 @@ def combine_txt_to_jsonl(folder_in: pathlib.Path, jsonl_out: pathlib.Path, sub_p
         jsonl_out.unlink()
 
     worker = mpb.EPTS(
-        extract = u.list_folder_documents, extract_args = (folder_in, _is_txt_document),
+        extract = u.list_folder_documents, extract_args = (folder_in, u.is_txt_document),
         transform = _process_document,
         save = _save_documents_to_jsonl, save_args = (jsonl_out),
         worker_count = sub_process_count,
         show_progress = True)
     worker.start()
     worker.join()
-
-@typechecked
-def _is_txt_document(file_path: pathlib.Path) -> bool:
-    """
-    Determins if the file should be included in the processing
-    """
-    result = \
-        file_path.is_file() and \
-        file_path.suffix.lower() == '.txt' and \
-        not file_path.stem.startswith('_')
-    return result
 
 @typechecked
 def _process_document(document_path: str) -> dict:
