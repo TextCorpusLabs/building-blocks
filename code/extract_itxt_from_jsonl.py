@@ -57,13 +57,14 @@ def _save_txt_document(state:t.Tuple[str, str, t.List[str]], document: dict) -> 
                 file_name = pathlib.Path(state[0]).joinpath(f'./{document[state[1]]}.txt')
                 with open(file_name, 'w', encoding = 'utf-8') as fp:
                     for i in range(0, len(values[0])):
-                        tmp = [f'{vn[i]}\n' for vn in values]
-                        fp.writelines(tmp + ['\n'])
+                        lines = [f'{vn[i]}\n' for vn in values]
+                        footer = ['\n'] if i < len(values[0])-1 else []
+                        fp.writelines(lines + footer)
                 return (0, '')
             else:
-                return (1, f'`List` elements different lengths in document : {document[state[1]]}')
+                return (3, f'`List` elements different lengths in document : {document[state[1]]}')
         else:
-            return (1, f'missing `List` elements in document : {document[state[1]]}')
+            return (2, f'missing `List` elements in document : {document[state[1]]}')
     else:
         return (1, f'missing id: {state[1]}')
 
