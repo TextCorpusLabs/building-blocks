@@ -22,5 +22,5 @@ Files that only exist in some, but not all, of the folders will still be merged.
    * The optional `-spc` parameter allows for tuning on multi core machines.
      It defaults to 1.
    ```{ps1}
-   python combine_txt_to_jsonl.py -in d:/separated_files -out d:/corpus.jsonl
+   python merge_json_folders.py -in d:/foo,d:/bar -out d:/baz
    ```
