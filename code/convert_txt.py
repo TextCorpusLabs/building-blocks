@@ -6,7 +6,7 @@ from argparse import ArgumentParser
 from typeguard import typechecked
 
 @typechecked
-def convert_txtf(folder_in: pathlib.Path, folder_out: pathlib.Path, stem: str, max_lines: int, sub_process_count: int) -> None:
+def convert_txt(folder_in: pathlib.Path, folder_out: pathlib.Path, stem: str, max_lines: int, sub_process_count: int) -> None:
     """
     Convert a folder of `TXT` files into a folder of _bigger_ `TXT` files.
 
@@ -125,4 +125,4 @@ if __name__ == '__main__':
     print(f'stem: {args.stem}')
     print(f'max lines: {args.max_lines}')
     print(f'sub process count: {args.sub_process_count}')
-    convert_txtf(args.folder_in, args.folder_out, arg.stem, args.max_lines, args.sub_process_count)
+    convert_txt(args.folder_in, args.folder_out, arg.stem, args.max_lines, args.sub_process_count)
