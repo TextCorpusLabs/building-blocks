@@ -30,5 +30,5 @@ If there is an error in a run, remove the `-O`, capture the error, and submit an
 06. - [x] [Extract](./docs/extract_itxt_from_jsonl.md) a folder of _interleaved_ `TXT` files from a `JSONL` file.
 07. - [x] [Extract](./docs/extract_json_from_jsonl.md) a folder of `JSON` files from a a `JSONL` file.
 08. - [x] [Extract](./docs/extract_txt_from_jsonl.md) a folder of `TXT` files from a `JSONL` file.
-09. - [ ] [Merge](./docs/merge_json_folders.md) _several_ folders of `JSON` files into a _single_ folder of `JSON` files based on their file name.
-10. - [ ] [Merge](./docs/merge_txt_folders.md) _several_ folders of `TXT` files into a _single_ folder of `TXT` files based on their file name.
+09. - [x] [Merge](./docs/merge_json_folders.md) _several_ folders of `JSON` files into a _single_ folder of `JSON` files based on their file name.
+10. - [x] [Merge](./docs/merge_txt_folders.md) _several_ folders of `TXT` files into a _single_ folder of `TXT` files based on their file name.
