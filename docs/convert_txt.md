@@ -24,5 +24,5 @@ The pathing can be changed by updating the parameters.
    * The optional `-spc` parameter allows for tuning on multi core machines.
      It defaults to 1.
    ```{ps1}
-   python convert_txt.py -in d:/corpus_in.jsonl -out d:/corpus_out.jsonl
+   python convert_txt.py -in d:/corpus_in -out d:/corpus_out
    ```
