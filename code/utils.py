@@ -85,3 +85,12 @@ def is_json_document(file_path: pathlib.Path) -> bool:
         file_path.suffix.lower() == '.json' and \
         not file_path.stem.startswith('_')
     return result
+
+
+@typechecked
+def drain_iterator(completes: t.Iterator[int]) -> None:
+    """
+    Runs through the iterator, doing nothing
+    """
+    for _ in completes:
+        pass

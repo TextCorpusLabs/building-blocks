@@ -30,7 +30,7 @@ def extract_txt_from_jsonl(jsonl_in: pathlib.Path, folder_out: pathlib.Path, id_
     worker = mpb.EPTS(
         extract = u.list_jsonl_documents, extract_args = (jsonl_in),
         transform = _save_txt_document, transform_init = _passthrough, transform_init_args = (str(folder_out), id_element, extract),
-        save = _no_op,
+        save = u.drain_iterator,
         worker_count = sub_process_count,
         show_progress = True)
     worker.start()
@@ -85,15 +85,6 @@ def _passthrough(folder_out: str, id_element: str, extract: t.List[str]) -> t.Tu
     """
     result = (folder_out, id_element, extract)
     return result
-
-@typechecked
-def _no_op(completes: t.Iterator[int]) -> None:
-    """
-    Does nothing.
-    We are abusing the "transform" step to do all the writing
-    """
-    for _ in completes:
-        pass
 
 if __name__ == '__main__':
     parser = ArgumentParser()
