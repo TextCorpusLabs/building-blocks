@@ -83,9 +83,8 @@ if __name__ == '__main__':
         help = 'The number of sub processes used to transformation from in to out formats',
         type = int,
         default = 1)
-    #args = parser.parse_args()
-    #print(f'folders in: {args.folders_in}')
-    #print(f'folder out: {args.folder_out}')
-    #print(f'sub process count: {args.sub_process_count}')
-    #merge_json_folders([pathlib.Path(folder) for folder in args.folders_in], args.folder_out, args.sub_process_count)
-    merge_json_folders([pathlib.Path(folder) for folder in u.csv_list('d:/foo/a,d:/foo/b')], pathlib.Path('d:/foo/m'), 1)
+    args = parser.parse_args()
+    print(f'folders in: {args.folders_in}')
+    print(f'folder out: {args.folder_out}')
+    print(f'sub process count: {args.sub_process_count}')
+    merge_json_folders([pathlib.Path(folder) for folder in args.folders_in], args.folder_out, args.sub_process_count)
