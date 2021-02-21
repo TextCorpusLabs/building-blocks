@@ -125,4 +125,4 @@ if __name__ == '__main__':
     print(f'stem: {args.stem}')
     print(f'max lines: {args.max_lines}')
     print(f'sub process count: {args.sub_process_count}')
-    convert_txt(args.folder_in, args.folder_out, arg.stem, args.max_lines, args.sub_process_count)
+    convert_txt(args.folder_in, args.folder_out, args.stem, args.max_lines, args.sub_process_count)
