@@ -51,6 +51,25 @@ def list_folder_documents(folder_in: pathlib.Path, is_document: t.Callable[[path
             yield str(file_name)
 
 @typechecked
+def list_merged_folder_documents(folders_in: t.List[pathlib.Path], is_document: t.Callable[[pathlib.Path], bool]) -> t.Iterator[t.List[str]]:
+    """
+    Lists the documents in the merge folders
+
+    Parameters
+    ----------
+    folders_in : pathlib.Path
+        The folders containing the documents to merge 
+    """
+    seen = set()
+    for folder in folders_in:
+        for file_name in folder.iterdir():
+            if is_document(file_name) and file_name.name not in seen:
+                result = [f.joinpath(file_name.name) for f in folders_in]
+                result = [str(f) for f in result if f.exists()]
+                yield result
+                seen.add(file_name.name)
+
+@typechecked
 def csv_list(text: str) -> t.List[str]:
     """
     Converts a CSV string into its componet parts
