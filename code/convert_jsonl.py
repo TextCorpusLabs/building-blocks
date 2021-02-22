@@ -72,7 +72,7 @@ def _save_documents(documents: t.Iterator[dict], jsonl_out: pathlib.Path) -> Non
     jsonl_out : pathlib.Path
         The JSONL file containing all the documents
     """
-    with open(jsonl_out, 'w', encoding = 'utf-16') as fp:
+    with open(jsonl_out, 'w', encoding = 'utf-8') as fp:
         with jl.Writer(fp, compact = True, sort_keys = True) as writer:
             for document in documents:
                 writer.write(document)
