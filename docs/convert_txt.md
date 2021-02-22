@@ -12,7 +12,7 @@ The pathing can be changed by updating the parameters.
 
 1. Clone this repository.
 2. Open a PowerShell window to the `~/code` directory.
-3. [Convert](../code/convert_txt.md) a folder of `TXT` files into a folder of _bigger_ `TXT` files.
+3. [Convert](../code/convert_txt.py) a folder of `TXT` files into a folder of _bigger_ `TXT` files.
    * The `-in`/`-out` parameters control the source and destination folders.
      If the output folder does not exist it is created.
      **WARNING**: If the output folder _does exist AND is not empty_, new `TXT` files will overwrite old ones.
