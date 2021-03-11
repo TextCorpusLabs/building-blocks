@@ -82,7 +82,9 @@ if __name__ == '__main__':
         type = int,
         default = 1)
     args = parser.parse_args()
+    print(' --- merge_txt_folders ---')
     print(f'folders in: {args.folders_in}')
     print(f'folder out: {args.folder_out}')
     print(f'sub process count: {args.sub_process_count}')
+    print(' ---------')
     merge_txt_folders([pathlib.Path(folder) for folder in args.folders_in], args.folder_out, args.sub_process_count)

@@ -119,10 +119,12 @@ if __name__ == '__main__':
         help = 'The number of sub processes used to transformation from in to out formats',
         type = int,
         default = 1)
-    args = parser.parse_args()    
+    args = parser.parse_args()
+    print(' --- convert_txt ---')
     print(f'folder in: {args.folder_in}')
     print(f'folder out: {args.folder_out}')
     print(f'stem: {args.stem}')
     print(f'max lines: {args.max_lines}')
     print(f'sub process count: {args.sub_process_count}')
+    print(' ---------')
     convert_txt(args.folder_in, args.folder_out, args.stem, args.max_lines, args.sub_process_count)

@@ -75,7 +75,9 @@ if __name__ == '__main__':
         type = int,
         default = 1)
     args = parser.parse_args()
+    print(' --- combine_json_to_jsonl ---')
     print(f'folder in: {args.folder_in}')
     print(f'JSONL out: {args.jsonl_out}')
     print(f'sub process count: {args.sub_process_count}')
+    print(' ---------')
     combine_json_to_jsonl(args.folder_in, args.jsonl_out, args.sub_process_count)

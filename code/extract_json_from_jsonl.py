@@ -83,9 +83,11 @@ if __name__ == '__main__':
         help = 'The number of sub processes used to transformation from in to out formats',
         type = int,
         default = 1)
-    args = parser.parse_args()    
+    args = parser.parse_args()
+    print(' --- extract_json_from_jsonl ---')
     print(f'jsonl in: {args.jsonl_in}')
     print(f'folder out: {args.folder_out}')
     print(f'id element: {args.id_element}')
     print(f'sub process count: {args.sub_process_count}')
+    print(' ---------')
     extract_json_from_jsonl(args.jsonl_in, args.folder_out, args.id_element, args.sub_process_count)
