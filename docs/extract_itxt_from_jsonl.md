@@ -27,7 +27,7 @@ The pathing can be changed by updating the parameters.
    * The `-e` parameter is used to select the elements to extract.
      It is a csv list.
      All elements must be of type `List` and those lists must be the same length.
-     `List` of `List` will be concatinated into a un-nested `List`, seperated by a ' '.
+     `List` of `List` will be concatenated into a un-nested `List`, separated by a ' '.
    * The optional `-spc` parameter allows for tuning on multi core machines.
      It defaults to 1.
    ```{ps1}
