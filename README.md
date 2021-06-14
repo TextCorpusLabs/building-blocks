@@ -2,7 +2,6 @@
 
 ![Python](https://img.shields.io/badge/python-3.x-blue.svg)
 ![MIT license](https://img.shields.io/badge/License-MIT-green.svg)
-![Last Updated](https://img.shields.io/badge/Last%20Updated-2021.06.12-success.svg)
 
 Below is a list of the corpus tools we use at Text Corpus Labs.
 They are intended to be general purpose building blocks allowing for conversion between our different processes.
