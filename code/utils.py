@@ -82,6 +82,17 @@ def csv_list(text: str) -> t.List[str]:
     result = [item.strip() for item in text.split(',')]
     return result
 
+@typechecked
+def csv_tuple(text: str) -> t.List[t.Tuple[str, str]]:
+    """
+    Converts a ':' paired ',' seperated list into a list of tuples
+    Parameters
+    ----------
+    text : str
+        The text to convert
+    """
+    result = [tuple(target.split(':')) for target in text.split(',')]
+    return result
 
 @typechecked
 def is_txt_document(file_path: pathlib.Path) -> bool:
