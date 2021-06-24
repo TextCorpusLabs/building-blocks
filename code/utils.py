@@ -60,14 +60,16 @@ def list_merged_folder_documents(folders_in: t.List[pathlib.Path], is_document: 
     folders_in : pathlib.Path
         The folders containing the documents to merge 
     """
-    seen = set()
-    for folder in folders_in:
+    for i in range(len(folders_in)):
+        folder = folders_in[i]
         for file_name in folder.iterdir():
-            if is_document(file_name) and file_name.name not in seen:
+            if is_document(file_name):
                 result = [f.joinpath(file_name.name) for f in folders_in]
-                result = [str(f) for f in result if f.exists()]
-                yield result
-                seen.add(file_name.name)
+                exists = [f.exists() for f in result]
+                if i > 0 and any(exists[0:i]):
+                    continue
+                docs = [str(result[i]) for i in range(len(result)) if exists[i]]
+                yield docs
 
 @typechecked
 def csv_list(text: str) -> t.List[str]:
