@@ -14,7 +14,7 @@ The pathing can be changed by updating the parameters.
      If the output folder does not exist it is created.
      **WARNING**: If the output folder _does exist AND is not empty_, new `TXT` files will overwrite old ones.
    * The `-id` parameter is used to select the file name.
-     I.E. `f'./{id}.json'`.
+     I.E. `f'./{id}.txt'`.
      If the `id` element can not be found the file will not be created.
      It defaults to 'id'.
    * The `-e` parameter is used to select the elements to extract.
