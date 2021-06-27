@@ -12,8 +12,8 @@ I.E. element `id` in file 1 folder 1 will be overwritten by the `id` element in 
 Files that only exist in some, but not all, of the folders will still be merged.
 
 1. Clone this repository.
-2. Open a PowerShell window to the `~/code` directory.
-3. [Merge](../code/merge_json_folders.py) _several_ folders of `JSON` files into a _single_ folder of `JSON` files based on their file name.
+2. Open a PowerShell window to the `~/src` directory.
+3. [Merge](../src/merge_json_folders.py) _several_ folders of `JSON` files into a _single_ folder of `JSON` files based on their file name.
    * The `-in` parameter controls the source folders.
      It is a csv list.
      **NOTE**: only `JSON` files that do not start with `_` will be merged.     

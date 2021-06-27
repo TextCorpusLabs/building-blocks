@@ -8,8 +8,8 @@ Below are the steps needed to run the _tokenization_ process.
 The pathing can be changed by updating the parameters.
 
 1. Clone this repository.
-2. Open a PowerShell window to the `~/code` directory.
-3. [Tokenize](../code/tokenise_jsonl.py) a `JSONL` file by applying the NLTK defaults (Punkt + Penn Treebank) to a text field.
+2. Open a PowerShell window to the `~/src` directory.
+3. [Tokenize](../src/tokenise_jsonl.py) a `JSONL` file by applying the NLTK defaults (Punkt + Penn Treebank) to a text field.
    * The `-in`/`-out` parameters control the source and destination file.
      If the output folder does not exist it is created.
    * The optional `-id` parameter controls which element will be used to correlate related files pre/post tokenization.

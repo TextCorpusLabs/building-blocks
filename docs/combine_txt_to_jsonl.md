@@ -8,8 +8,8 @@ Below are the steps needed to run the _combination_ process.
 The pathing can be changed by updating the parameters.
 
 1. Clone this repository.
-2. Open a PowerShell window to the `~/code` directory.
-3. [Combine](../code/combine_txt_to_jsonl.py) a folder of `TXT` files into a single `JSONL` file.
+2. Open a PowerShell window to the `~/src` directory.
+3. [Combine](../src/combine_txt_to_jsonl.py) a folder of `TXT` files into a single `JSONL` file.
    The `JSON` elements will contain an `id` and a `text` element.
    `id` is the file's name.
    `text` is the file contents.

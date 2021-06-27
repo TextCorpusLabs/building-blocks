@@ -8,8 +8,8 @@ Below are the steps needed to run the _extraction_ process.
 The pathing can be changed by updating the parameters.
 
 1. Clone this repository.
-2. Open a PowerShell window to the `~/code` directory.
-3. [Extract](../code/extract_txt_from_jsonl.py) a folder of `TXT` files from a `JSONL` file.
+2. Open a PowerShell window to the `~/src` directory.
+3. [Extract](../src/extract_txt_from_jsonl.py) a folder of `TXT` files from a `JSONL` file.
    * The `-in`/`-out` parameters control the source file and destination folder.
      If the output folder does not exist it is created.
      **WARNING**: If the output folder _does exist AND is not empty_, new `TXT` files will overwrite old ones.
