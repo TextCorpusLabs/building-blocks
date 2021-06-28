@@ -1,5 +1,5 @@
 # IDE/tools
-vscode
+.vscode
 __pycache__
 debug.log
 *.bak
