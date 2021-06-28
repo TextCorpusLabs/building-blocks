@@ -43,5 +43,5 @@ If there is an error in a run, remove the `-O`, capture the error, and submit an
 02. - [x] [Merge](./docs/merge_txt_folders.md) _several_ folders of `TXT` files into a _single_ folder of `TXT` files based on their file name.
 
 ## Transform
-01. - [ ] [Count](./docs/count_ngrams.md) the n-grams for a `JSONL` file.
+01. - [x] [Count](./docs/count_ngrams.md) the n-grams for a `JSONL` file.
 02. - [x] [Tokenize](./docs/tokenize_jsonl.md) a `JSONL` file using the NLTK defaults (Punkt + Penn Treebank).
