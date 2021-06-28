@@ -5,8 +5,8 @@
 
 Below is a list of the corpus tools we use at Text Corpus Labs.
 They are intended to be general purpose building blocks allowing for conversion between our different processes.
-Each tool should be considered stand-alone and includes both code (`~/code`) and documentation (`~/docs`).
-There is a _combined_ `requirements.txt` file for all the tools found in `~/code`.
+Each tool should be considered stand-alone and includes both code (`~/scr`) and documentation (`~/docs`).
+There is a _combined_ `requirements.txt` file for all the tools found in `~/scr`.
 The documentation will include both instructions as to what the code is for and how to run it.
 
 # Prerequisites
