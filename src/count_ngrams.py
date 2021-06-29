@@ -29,7 +29,7 @@ def count_ngrams(jsonl_in: pathlib.Path, csv_out: pathlib.Path, size: int, top: 
         csv_out.unlink()
     counts = _count_ngram(jsonl_in, size, fields)
     min = _min_count(counts, top)
-    _save_counts(counts, csv_out, min)
+    _save_counts(counts, csv_out, min, size)
 
 @typechecked
 def _count_ngram(jsonl_in: pathlib.Path, size: int, fields: t.List[str]) -> dict:
@@ -67,28 +67,19 @@ def _min_count(counts: dict, top: int) -> int:
     return min
 
 @typechecked
-def _save_counts(counts: dict, csv_out: pathlib.Path, min: int) -> None:
+def _save_counts(counts: dict, csv_out: pathlib.Path, min: int, size: int) -> None:
     """
     Saves the documents to CSV
-    
-    Parameters
-    ----------
-    documents : Iterator[dict]
-        The `dict`s to save
-    csv_out : pathlib.Path
-        The CSV file containing all the documents
-    extract : List[str]
-        The name(s) of the elements to extract
     """
     bar_i = 0
     widgets = [ 'Saving n-grams # ', pb.Counter(), ' ', pb.Timer(), ' ', pb.BouncingBar(marker = '.', left = '[', right = ']')]
     with pb.ProgressBar(widgets = widgets) as bar:
         with open(csv_out, 'w', encoding = 'utf-8', newline = '') as fp:
             writer = csv.writer(fp, delimiter = ',', quotechar = '"', quoting = csv.QUOTE_ALL)    
-            writer.writerow(['count', 'ngram'])
+            writer.writerow(['n', 'count', 'ngram'])
             for key, value in counts.items():
                 if value >= min:
-                    writer.writerow([value, key])
+                    writer.writerow([size, value, key])
                     bar_i = bar_i + 1
                     bar.update(bar_i)
 
