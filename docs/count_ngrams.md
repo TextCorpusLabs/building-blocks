@@ -16,6 +16,9 @@ The pathing can be changed by updating the parameters.
    * The `-t` parameter controls how many n-grams are saved.
    * The optional `-f` parameter allows the input element's name to be changed or provide a list of such elements in csv form.
      It defaults to 'text'.
+   * The optional `-c` parameter controls the amount of n-grams to chunk to disk to prevent OOM.
+     Higher values use more ram, but compute the overall value faster.
+     It defaults to 10M.
    ```{ps1}
    python count_ngrams.py -in d:/corpus_in.jsonl -out d:/corpus_out.csv -n 1 -t 10000
    ```

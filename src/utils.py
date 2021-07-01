@@ -1,5 +1,6 @@
 import pathlib
 import jsonlines as jl
+import progressbar as pb
 import typing as t
 from typeguard import typechecked
 
@@ -126,3 +127,13 @@ def drain_iterator(completes: t.Iterator[int]) -> None:
     """
     for _ in completes:
         pass
+
+@typechecked
+def progress_overlay(items: t.Iterator, title: str) -> t.Iterator:
+    bar_i = 0
+    widgets = [title, ' ', pb.Counter(), ' ', pb.Timer(), ' ', pb.BouncingBar(marker = '.', left = '[', right = ']')]
+    with pb.ProgressBar(widgets = widgets) as bar:
+        for item in items:
+            bar_i = bar_i + 1
+            bar.update(bar_i)
+            yield item
