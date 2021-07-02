@@ -53,10 +53,9 @@ def _count_ngrams_in_doc(document: dict, fields: t.List[str], size: int) -> dict
     for field in fields:
         if field in document:
             for line in document[field]:
-                tokens = line.split(' ')
+                tokens = line.upper().split(' ')
                 for i in range(len(tokens) - size + 1):
                     ngram = ' '.join(tokens[i:(i+size)])
-                    ngram = ngram.upper()
                     if ngram not in result:
                         result[ngram] = 0
                     result[ngram] = result[ngram] + 1
