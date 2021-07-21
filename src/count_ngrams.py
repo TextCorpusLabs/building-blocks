@@ -72,7 +72,7 @@ def _chunk_ngrams_in_corpus(ngram_list: t.Iterator[dict], chunk_size: int) -> t.
         if len(tmp) > chunk_size:
             yield tmp
             tmp = {}
-    if len(tmp) > chunk_size:
+    if len(tmp) > 0:
         yield tmp
 
 @typechecked
@@ -154,7 +154,7 @@ def _save_ngrams(ngrams: dict, csv_out: pathlib.Path, size: int) -> None:
     with open(csv_out, 'w', encoding = 'utf-8', newline = '') as fp:
         writer = csv.writer(fp, delimiter = ',', quotechar = '"', quoting = csv.QUOTE_ALL)
         writer.writerow(['n', 'count', 'ngram'])
-        for ngram, count in ngrams.items():
+        for ngram, count in sorted(ngrams.items(), key = lambda a: a[1], reverse = True):
             writer.writerow([size, count, ngram])
 
 if __name__ == '__main__':
