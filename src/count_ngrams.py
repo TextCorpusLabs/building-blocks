@@ -88,12 +88,28 @@ def _cache_ngram_chunks(ngrams: dict, cache_dir: pathlib.Path) -> pathlib.Path:
 def _read_ngram_caches(caches: t.List[pathlib.Path]) -> t.Iterator[list]:
     readers = [_read_ngram_cache(cache) for cache in caches]
     current = [next(reader) for reader in readers]
-    indxes = [i for i in range(len(current))]
-    while any(x is not None for x in current):
-        i = sorted(indxes, key = lambda i: (current[i] is None, current[i]))
-        result = current[i[0]]
-        yield result
-        current[i[0]] = next(readers[i[0]], None)
+    cnt = len(current)
+    while cnt > 0:
+        i = _min_index(current)
+        yield current[i]
+        current[i] = next(readers[i], None)
+        if current[i] is None:
+            cnt = cnt - 1
+
+@typechecked
+def _min_index(ngrams: t.List[t.Union[list, None]]) -> int:
+    len_ngs = len(ngrams)
+    for i in range(len_ngs):
+        if ngrams[i] is not None:
+            min_ng = ngrams[i][0]
+            min_i = i
+            break
+    for i in range(min_i + 1, len_ngs):
+        curr = ngrams[i]
+        if curr is not None and curr[0] < min_ng:
+            min_ng = curr[0]
+            min_i = i
+    return min_i
 
 @typechecked
 def _read_ngram_cache(cache: pathlib.Path) -> t.Iterator[list]:
