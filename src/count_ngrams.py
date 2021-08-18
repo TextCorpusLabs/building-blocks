@@ -38,9 +38,10 @@ def count_ngrams(jsonl_in: pathlib.Path, csv_out: pathlib.Path, size: int, top: 
     docs = u.progress_overlay(docs, 'Reading document')
     ngrams = (_count_ngrams_in_doc(doc, fields, size) for doc in docs)
     chunks = _chunk_ngrams_in_corpus(ngrams, chunk_size)
-    caches = (_cache_ngram_chunks(x, cache_dir) for x in chunks)
+    chunks = (_sort_ngram_chunk(x) for x in chunks)
+    caches = (_write_ngram_chunk(x, cache_dir) for x in chunks)
     caches = list(caches)
-    ngrams = _read_ngram_caches(caches)
+    ngrams = _read_ngram_chunks(caches)
     ngrams = _aggregate_ngrams_caches(ngrams)
     ngrams = u.progress_overlay(ngrams, 'Reading n-grams')
     ngrams = _keep_top_ngrams(ngrams, top)    
@@ -76,17 +77,22 @@ def _chunk_ngrams_in_corpus(ngram_list: t.Iterator[dict], chunk_size: int) -> t.
         yield tmp
 
 @typechecked
-def _cache_ngram_chunks(ngrams: dict, cache_dir: pathlib.Path) -> pathlib.Path:
+def _sort_ngram_chunk(ngrams: dict) -> t.Iterator[t.List[str]]:
+    for ngram, count in sorted(ngrams.items(), key = lambda a: a[0]):
+        yield [ngram, count]
+
+@typechecked
+def _write_ngram_chunk(ngrams: t.Iterator[t.List[str]], cache_dir: pathlib.Path) -> pathlib.Path:
     file_name = cache_dir.joinpath(f'tmp_{uuid4()}.csv')
     with open(file_name, 'w', encoding = 'utf-8', newline = '') as fp:
         writer = csv.writer(fp, delimiter = ',', quotechar = '"', quoting = csv.QUOTE_ALL)
-        for ngram, count in sorted(ngrams.items(), key = lambda a: a[0]):
-            writer.writerow([ngram, count])
+        for ngram in ngrams:
+            writer.writerow(ngram)
     return file_name
 
 @typechecked
-def _read_ngram_caches(caches: t.List[pathlib.Path]) -> t.Iterator[list]:
-    readers = [_read_ngram_cache(cache) for cache in caches]
+def _read_ngram_chunks(caches: t.List[pathlib.Path]) -> t.Iterator[list]:
+    readers = [_read_ngram_chunk(cache) for cache in caches]
     current = [next(reader) for reader in readers]
     cnt = len(current)
     while cnt > 0:
@@ -112,7 +118,7 @@ def _min_index(ngrams: t.List[t.Union[list, None]]) -> int:
     return min_i
 
 @typechecked
-def _read_ngram_cache(cache: pathlib.Path) -> t.Iterator[list]:
+def _read_ngram_chunk(cache: pathlib.Path) -> t.Iterator[list]:
     with open(cache, 'r', encoding = 'utf-8') as fp:
         reader = csv.reader(fp, delimiter = ',', quotechar = '"')
         for item in reader:
