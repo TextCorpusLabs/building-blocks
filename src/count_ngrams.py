@@ -52,21 +52,20 @@ def count_ngrams(jsonl_in: pathlib.Path, csv_out: pathlib.Path, size: int, top: 
     cache_dir = csv_out.parent.joinpath(f'tmp_{csv_out.name}')
     cache_dir.mkdir(parents = True, exist_ok = True)
 
-    #docs = ul.list_documents(jsonl_in)
-    #docs = u.progress_overlay(docs, 'Reading document')
-    #ngrams = (_count_ngrams_in_doc(doc, fields, size) for doc in docs)
-    #chunks = _chunk_ngrams_in_corpus(ngrams, chunk_size)
-    #chunks = (_sort_ngram_chunk(x) for x in chunks)
-    #chunks = (_write_ngram_chunk(x, cache_dir) for x in chunks)
-    #chunks = list(chunks)
-    #chunk = _merge_ngram_chunks(chunks, cache_dir, sub_process_count)
-    chunk = list(cache_dir.iterdir())[0]
+    docs = ul.list_documents(jsonl_in)
+    docs = u.progress_overlay(docs, 'Reading document')
+    ngrams = (_count_ngrams_in_doc(doc, fields, size) for doc in docs)
+    chunks = _chunk_ngrams_in_corpus(ngrams, chunk_size)
+    chunks = (_sort_ngram_chunk(x) for x in chunks)
+    chunks = (_write_ngram_chunk(x, cache_dir) for x in chunks)
+    chunks = list(chunks)
+    chunk = _merge_ngram_chunks(chunks, cache_dir, sub_process_count)
     ngrams = _read_ngram_chunk(chunk)
     ngrams = u.progress_overlay(ngrams, 'Reading n-grams')
     ngrams = _keep_top_ngrams(ngrams, top)
     ngrams = sorted(ngrams, key = lambda ng: ng.count, reverse = True)
     _write_ngrams(ngrams, csv_out, size)
-    #shutil.rmtree(cache_dir)
+    shutil.rmtree(cache_dir)
 
 @typechecked
 def _count_ngrams_in_doc(document: dict, fields: t.List[str], size: int) -> dict:
