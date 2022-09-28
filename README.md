@@ -2,18 +2,43 @@
 
 ![Python](https://img.shields.io/badge/python-3.x-blue.svg)
 ![MIT license](https://img.shields.io/badge/License-MIT-green.svg)
+![Last Updated](https://img.shields.io/badge/Last%20Updated-2022.09.28-success.svg)
 
 Below is a list of the corpus tools we use at Text Corpus Labs.
 They are intended to be general purpose building blocks allowing for conversion between our different processes.
-Each tool should be considered stand-alone and includes both code (`~/scr`) and documentation (`~/docs`).
-There is a _combined_ `requirements.txt` file for all the tools found in `~/scr`.
-The documentation will include both instructions as to what the code is for and how to run it.
 
-# Prerequisites
+**NOTE**: This project is currently in the process of undergoing a retrofit.
+The below checklist now shows conversion status.
+While in progress, the old cold will still work, it is just nested in a subfolder.
 
-All scripts follow our standard [prerequisite](https://github.com/TextCorpusLabs/getting-started#prerequisites) and [Python](https://github.com/TextCorpusLabs/getting-started#python) instructions.
+# Operation
 
-# Scripts
+## Install
+
+You can install the package using the following steps:
+
+1. `pip` install using an _admin_ prompt.
+   ```{ps1}
+   pip uninstall buildingblocks
+   pip install -v git+https://github.com/TextCorpusLabs/building-blocks.git
+   ```
+
+## Run
+
+You can run the package in the following ways:
+
+### Extract
+
+01. Pull fields from every JSON object in a JSONL file into a CSV file
+   ```{ps1}
+   buildingblocks extract jsonl_to_csv `
+      -source d:/data/corpus `
+      -dest d:/data/corpus.csv `
+      -e id,text
+   ```
+
+
+# TODO
 
 All script commands are presented in PowerShell syntax.
 If you use a different shell, your syntax will be different.
@@ -33,7 +58,6 @@ If there is an error in a run, remove the `-O`, capture the error, and submit an
 03. - [x] [Convert](./docs/convert_jsont_to_jsonl.md) a `JSONT` file into a `JSONL` file.
 
 ## Extract
-01. - [x] [Extract](./docs/extract_csv_from_jsonl.md) a `CSV` file from a `JSONL` file.
 02. - [x] [Extract](./docs/extract_itxt_from_jsonl.md) a folder of _interleaved_ `TXT` files from a `JSONL` file.
 03. - [x] [Extract](./docs/extract_json_from_jsonl.md) a folder of `JSON` files from a a `JSONL` file.
 04. - [x] [Extract](./docs/extract_txt_from_jsonl.md) a folder of `TXT` files from a `JSONL` file.
@@ -45,3 +69,32 @@ If there is an error in a run, remove the `-O`, capture the error, and submit an
 ## Transform
 01. - [x] [Count](./docs/count_ngrams.md) the n-grams for a `JSONL` file.
 02. - [x] [Tokenize](./docs/tokenize_jsonl.md) a `JSONL` file using the NLTK defaults (Punkt + Penn Treebank).
+
+# Development
+
+## Prerequisites
+
+Install the required modules for each of the repositories.
+
+1. Clone this repository then open an _Admin_ shell to the `~/` directory.
+2. Install the required modules.
+   ```{shell}
+   pip uninstall buildingblocks
+   pip install -e c:/repos/TextCorpusLabs/building-blocks
+   ```
+3. Setup the `~/.vscode/launch.json` file (VS Code only)
+   1. Click the "Run and Debug Charm"
+   2. Click the "create a launch.json file" link
+   3. Select "Python"
+   4. Select "module" and enter _buildingblocks_
+   5. Select one of the following modes and add the below `args` to the launch.json file.
+      The `args` node should be a sibling of the `module` node.
+      They may need to be changed for your pathing.
+      1. Download
+         ```{json}
+         "args" : [
+           "extract", "jsonl_to_csv",
+           "-source", "d:/data/corpus",
+           "-dest", "d:/data/corpus.csv",
+           "-e", "id,text"]
+         ```
