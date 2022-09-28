@@ -92,7 +92,7 @@ def csv_tuple(text: str) -> t.List[t.Tuple[str, str]]:
 
 def is_txt_document(file_path: pathlib.Path) -> bool:
     """
-    Determins if the file should be included in the processing
+    Determines if the file should be included in the processing
     """
     result = \
         file_path.is_file() and \
@@ -102,11 +102,21 @@ def is_txt_document(file_path: pathlib.Path) -> bool:
 
 def is_json_document(file_path: pathlib.Path) -> bool:
     """
-    Determins if the file should be included in the processing
+    Determines if the file should be included in the processing
     """
     result = \
         file_path.is_file() and \
         file_path.suffix.lower() == '.json' and \
+        not file_path.stem.startswith('_')
+    return result
+
+def is_jsonl_document(file_path: pathlib.Path) -> bool:
+    """
+    Determines if the file should be included in the processing
+    """
+    result = \
+        file_path.is_file() and \
+        file_path.suffix.lower() == '.jsonl' and \
         not file_path.stem.startswith('_')
     return result
 
