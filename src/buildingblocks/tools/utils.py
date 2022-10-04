@@ -4,6 +4,8 @@ import progressbar as pb
 import typing as t
 from . import common_types as ct
 
+T = t.TypeVar('T')
+
 def guess_encoding(file_name: pathlib.Path) -> str:
     """
     Guess the encoding of a file
@@ -128,7 +130,7 @@ def drain_iterator(completes: t.Iterator[int]) -> None:
     for _ in completes:
         pass
 
-def progress_overlay(items: t.Iterable[t.Any], title: str) -> t.Iterable[t.Any]:
+def progress_overlay(items: t.Iterator[T], title: str) -> t.Iterator[T]:
     bar_i = 0
     widgets = [title, ' ', pb.Counter(), ' ', pb.Timer(), ' ', pb.BouncingBar(marker = '.', left = '[', right = ']')]
     with pb.ProgressBar(widgets = widgets) as bar:

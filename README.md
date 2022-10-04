@@ -29,14 +29,34 @@ You can run the package in the following ways:
 
 ### Extract
 
-01. Pull fields from every JSON object in a JSONL file into a CSV file
+1. Pull fields from every JSON object in a JSONL file into a CSV file
    ```{ps1}
    buildingblocks extract jsonl_to_csv `
       -source d:/data/corpus `
-      -dest d:/data/corpus.csv `
-      -e id,text
+      -dest d:/data/corpus.csv
    ```
+   The following are optional parameters
+   * `fields` are the names of the fields to extract.
+     It defaults to "id"
 
+### Transform
+
+1. Counts the n-grams in a JSONL file.
+   ```{ps1}
+   buildingblocks transform ngram `
+      -source d:/data/corpus `
+      -dest d:/data/corpus.ngrams.csv
+   ```
+   The following are optional parameters
+   * `fields` are the names of the fields to process.
+     It defaults to "text"
+   * `size` is the length of the n-gram.
+     It defaults to 1
+   * `top` is the number of n-grams to save.
+     It defaults to 10K
+   * `chunk` controls the amount of n-grams to chunk to disk to prevent OOM.
+     Higher values use more ram, but compute the overall value faster.
+     It defaults to 10M.
 
 # TODO
 
@@ -67,14 +87,11 @@ If there is an error in a run, remove the `-O`, capture the error, and submit an
 02. - [x] [Merge](./docs/merge_txt_folders.md) _several_ folders of `TXT` files into a _single_ folder of `TXT` files based on their file name.
 
 ## Transform
-01. - [x] [Count](./docs/count_ngrams.md) the n-grams for a `JSONL` file.
-02. - [x] [Tokenize](./docs/tokenize_jsonl.md) a `JSONL` file using the NLTK defaults (Punkt + Penn Treebank).
+01. - [x] [Tokenize](./docs/tokenize_jsonl.md) a `JSONL` file using the NLTK defaults (Punkt + Penn Treebank).
 
 # Development
 
-## Prerequisites
-
-Install the required modules for each of the repositories.
+Use the below instructions to setup the module for local development.
 
 1. Clone this repository then open an _Admin_ shell to the `~/` directory.
 2. Install the required modules.
@@ -89,12 +106,12 @@ Install the required modules for each of the repositories.
    4. Select "module" and enter _buildingblocks_
    5. Select one of the following modes and add the below `args` to the launch.json file.
       The `args` node should be a sibling of the `module` node.
-      They may need to be changed for your pathing.
-      1. Download
-         ```{json}
-         "args" : [
-           "extract", "jsonl_to_csv",
-           "-source", "d:/data/corpus",
-           "-dest", "d:/data/corpus.csv",
-           "-e", "id,text"]
-         ```
+      You will need to change your pathing and arguments.
+      The first two arguments determine the command, the other arguments are the command's parameters.
+      ```{json}
+      "args" : [
+         "extract", "jsonl_to_csv",
+         "-source", "d:/data/corpus",
+         "-dest", "d:/data/corpus.csv",
+         "-fields", "id,text"]
+      ```
