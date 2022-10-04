@@ -5,7 +5,7 @@ from . import utils as u
 
 Document = t.Dict[str, t.Any]
 
-def extract_csv_from_jsonl(source: pathlib.Path, dest: pathlib.Path, extract: t.List[str], sub_process_count: int) -> None:
+def extract_csv_from_jsonl(source: pathlib.Path, dest: pathlib.Path, extract: t.List[str]) -> None:
     """
     Extracts a `CSV` file from a `JSONL` file. 
 
@@ -17,8 +17,6 @@ def extract_csv_from_jsonl(source: pathlib.Path, dest: pathlib.Path, extract: t.
         The CSV file containing all the documents
     extract : List[str]
         The name(s) of the elements to extract
-    sub_process_count : int
-        The number of sub processes used to transformation from in to out formats
     """
 
     if dest.exists():
