@@ -2,6 +2,7 @@ import csv
 import multiprocessing as mp
 import pathlib
 import progressbar as pb
+import shutil
 import typing as t
 from sys import maxsize as MAX_SIZE
 from uuid import uuid4
@@ -42,12 +43,10 @@ def count_ngrams(source: pathlib.Path, dest: pathlib.Path, fields: t.List[str], 
         dest.unlink()
     cache_dir = dest.parent.joinpath(f'tmp_{dest.name}')
     cache_dir.mkdir(parents = True, exist_ok = True)
-
     if source.is_file():
         source_files = [source]
     else:
         source_files = (pathlib.Path(path) for path in u.list_folder_documents(source, u.is_jsonl_document))
-
     doc_collections = (u.list_jsonl_documents(file) for file in source_files)
     docs = (x for y in doc_collections for x in y)
     docs = u.progress_overlay(docs, 'Reading Document #')
@@ -61,8 +60,8 @@ def count_ngrams(source: pathlib.Path, dest: pathlib.Path, fields: t.List[str], 
     ngrams = u.progress_overlay(ngrams, 'Reading n-grams')
     ngrams = _keep_top_ngrams(ngrams, top)    
     ngrams = sorted(ngrams, key = lambda ng: ng.count, reverse = True)
-    _write_ngrams(ngrams, dest, size)
-    cache_dir.unlink()
+    _write_ngrams(ngrams, dest, size)    
+    shutil.rmtree(cache_dir)
 
 def _collect_ngrams_in_doc(document: ct.Document, fields: t.List[str], size: int) -> t.Dict[str,int]:
     result: t.Dict[str,int] = {}
@@ -104,11 +103,9 @@ def _write_ngram_chunk(ngrams: t.Iterator[_ngram], cache_dir: pathlib.Path) -> p
 
 def _merge_ngram_chunks(chunks: t.List[pathlib.Path], cache_dir: pathlib.Path, sub_process_count: int) -> pathlib.Path:
     widgets = ['N-Gram Chunks Left ', pb.Counter(), ' ', pb.Timer(), ' ', pb.BouncingBar(marker = '.', left = '[', right = ']')]
-    with pb.ProgressBar(widgets = widgets) as bar:
+    with pb.ProgressBar(widgets = widgets, initial_value = len(chunks)) as bar:
         with mp.Pool() as pool:
-            bar.update(1)
             while len(chunks) > 1:
-                bar.update(len(chunks))
                 pairs = (pair for pair in _pair_ngram_chunks(chunks))
                 args = (_merge_arg(p[0], p[1], cache_dir) for p in pairs)
                 args = list(args)
@@ -117,7 +114,7 @@ def _merge_ngram_chunks(chunks: t.List[pathlib.Path], cache_dir: pathlib.Path, s
     return chunks[0]
 
 def _pair_ngram_chunks(chunks: t.List[pathlib.Path]) -> t.Iterator[t.List[pathlib.Path]]:
-    t1 = None
+    t1: pathlib.Path | None = None
     for chunk in chunks:
         if t1 is None:
             t1 = chunk
