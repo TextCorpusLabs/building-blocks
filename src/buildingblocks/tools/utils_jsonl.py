@@ -4,22 +4,11 @@ import progressbar as pb
 import typing as t
 import utils as u
 from typeguard import typechecked
+from . import common_types as ct
 
-@typechecked
-def list_documents(jsonl_in: pathlib.Path) -> t.Iterator[dict]:
-    """
-    Lists all the documents in the `JSONL` file
 
-    Parameters
-    ----------
-    jsonl_in : pathlib.Path
-        The JSONL file containing all the documents
-    """
-    encoding = u.guess_encoding(jsonl_in)
-    with open(jsonl_in, 'r', encoding = encoding) as fp:
-        with jl.Reader(fp) as reader:
-            for item in reader:
-                yield item
+def list_documents(jsonl_in: pathlib.Path) -> t.Iterator[ct.Document]:
+    return u.list_jsonl_documents(jsonl_in)
 
 @typechecked
 def save_documents(jsonl_out: pathlib.Path, documents: t.Iterator[dict]) -> None:

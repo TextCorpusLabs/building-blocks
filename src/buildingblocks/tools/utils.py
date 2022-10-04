@@ -2,6 +2,7 @@ import pathlib
 import jsonlines as jl
 import progressbar as pb
 import typing as t
+from . import common_types as ct
 
 def guess_encoding(file_name: pathlib.Path) -> str:
     """
@@ -19,7 +20,7 @@ def guess_encoding(file_name: pathlib.Path) -> str:
     else:
         return "utf-8"
 
-def list_jsonl_documents(jsonl_in: pathlib.Path) -> t.Iterator[t.Dict[str, t.Any]]:
+def list_jsonl_documents(jsonl_in: pathlib.Path) -> t.Iterator[ct.Document]:
     """
     Lists the documents in the `JSONL` file
 

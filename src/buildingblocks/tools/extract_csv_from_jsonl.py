@@ -1,9 +1,8 @@
 import csv
 import pathlib
 import typing as t
+from . import common_types as ct
 from . import utils as u
-
-Document = t.Dict[str, t.Any]
 
 def extract_csv_from_jsonl(source: pathlib.Path, dest: pathlib.Path, fields: t.List[str]) -> None:
     """
@@ -34,7 +33,7 @@ def extract_csv_from_jsonl(source: pathlib.Path, dest: pathlib.Path, fields: t.L
     docs = u.progress_overlay(docs, 'Processing Document #')
     for _ in docs: pass
 
-def _extract_document(document: Document, fields: t.List[str]) -> Document:
+def _extract_document(document: ct.Document, fields: t.List[str]) -> ct.Document:
     """
     Extracts parts of the document 
 
@@ -45,7 +44,7 @@ def _extract_document(document: Document, fields: t.List[str]) -> Document:
     fields : List[str]
         The name(s) of the fields to extract
     """
-    result: Document = {}
+    result: ct.Document = {}
     for elm in fields:
         if elm in document:
             value = document[elm]
@@ -61,7 +60,7 @@ def _extract_document(document: Document, fields: t.List[str]) -> Document:
             result[elm] = value
     return result
 
-def _save_documents(dest: pathlib.Path, fields: t.List[str], documents: t.Iterator[Document]) -> t.Iterator[Document]:
+def _save_documents(dest: pathlib.Path, fields: t.List[str], documents: t.Iterator[ct.Document]) -> t.Iterator[ct.Document]:
     """
     Saves the documents to CSV
     
