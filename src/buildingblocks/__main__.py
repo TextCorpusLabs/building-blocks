@@ -26,13 +26,15 @@ def extract_block(parser: ArgumentParser) -> None:
 def transform_block(parser: ArgumentParser) -> None:
     def ngram(parser: ArgumentParser) -> None:
         def run(args: Namespace) -> None:
-            tools.count_ngrams(args.source, args.dest, args.fields, args.size, args.top, args.chunk)
+            tools.count_ngrams(args.source, args.dest, args.fields, args.size, args.top, args.chunk, args.keep_case, args.keep_punct)
         parser.add_argument('-source', type = pathlib.Path, required = True, help = 'The root folder of the folders containing JSONL files')
         parser.add_argument('-dest', type = pathlib.Path, required = True, help = 'The folder to store the converted CSV file')
         parser.add_argument('-fields',  type = utils.csv_list, default = 'text', help = 'The names of the fields to process')
         parser.add_argument('-size', type = int, default = 1, help = 'The length of the n-gram')
         parser.add_argument('-top', type = int, default = 10000, help = 'The number of n-grams to save')
         parser.add_argument('-chunk', type = int, default = 10000000, help = 'Controls the amount of n-grams to chunk to disk to prevent OOM')
+        parser.add_argument('-keep_case', action = 'store_true', help = 'Keeps the casing of the fields as-is before converting to tokens')
+        parser.add_argument('-keep_punct', action = 'store_true', help = 'Keeps all punctuation of the fields as-is before converting to tokens')
         parser.set_defaults(run = run)
     subparsers = parser.add_subparsers(help = 'sub-commands')
     ngram(subparsers.add_parser('ngram', help = "Counts the n-grams in a JSONL file"))

@@ -57,6 +57,8 @@ You can run the package in the following ways:
    * `chunk` controls the amount of n-grams to chunk to disk to prevent OOM.
      Higher values use more ram, but compute the overall value faster.
      It defaults to 10M.
+   * `keep_case` (flag) keeps the casing of `fields` as-is before converting to tokens for counting.
+   * `keep_punct` (flag) keeps all punctuation of `fields` as-is before converting to tokens for counting.
 
 # TODO
 

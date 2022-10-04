@@ -3,6 +3,7 @@ import multiprocessing as mp
 import pathlib
 import progressbar as pb
 import shutil
+import string
 import typing as t
 from sys import maxsize as MAX_SIZE
 from uuid import uuid4
@@ -20,7 +21,9 @@ class _ngram:
         self.gram = gram
         self.count = count
 
-def count_ngrams(source: pathlib.Path, dest: pathlib.Path, fields: t.List[str], size: int, top: int, chunk_size: int) -> None:
+_trans = str.maketrans(dict.fromkeys(string.punctuation, ' '))
+
+def count_ngrams(source: pathlib.Path, dest: pathlib.Path, fields: t.List[str], size: int, top: int, chunk_size: int, keep_case: bool, keep_punct: bool) -> None:
     """
     Calculate the n-grams for a `JSONL` file.
 
@@ -38,6 +41,10 @@ def count_ngrams(source: pathlib.Path, dest: pathlib.Path, fields: t.List[str], 
         The field(s) used to extract n-grams
     chunk_size: int
         The amount of n-grams to aggregate before cacheing
+    keep_case: bool
+        Keeps the casing of the fields as-is before converting to tokens
+    keep_punct: bool
+        Keeps all punctuation of the fields as-is before converting to tokens
     """
     if dest.exists():
         dest.unlink()
@@ -50,7 +57,7 @@ def count_ngrams(source: pathlib.Path, dest: pathlib.Path, fields: t.List[str], 
     doc_collections = (u.list_jsonl_documents(file) for file in source_files)
     docs = (x for y in doc_collections for x in y)
     docs = u.progress_overlay(docs, 'Reading Document #')
-    ngram_collections = (_collect_ngrams_in_doc(doc, fields, size) for doc in docs)
+    ngram_collections = (_collect_ngrams_in_doc(doc, fields, size, keep_case, keep_punct) for doc in docs)
     chunks = _chunk_ngram_collections(ngram_collections, chunk_size)
     chunks = (_sort_ngram_chunk(x) for x in chunks)
     chunks = (_write_ngram_chunk(x, cache_dir) for x in chunks)
@@ -63,12 +70,16 @@ def count_ngrams(source: pathlib.Path, dest: pathlib.Path, fields: t.List[str], 
     _write_ngrams(ngrams, dest, size)    
     shutil.rmtree(cache_dir)
 
-def _collect_ngrams_in_doc(document: ct.Document, fields: t.List[str], size: int) -> t.Dict[str,int]:
+def _collect_ngrams_in_doc(document: ct.Document, fields: t.List[str], size: int, keep_case: bool, keep_punct: bool) -> t.Dict[str,int]:
     result: t.Dict[str,int] = {}
     for field in fields:
         if field in document:
             for line in document[field]:
-                tokens = line.upper().split(' ')
+                if not keep_case:
+                    line = line.upper()
+                if not keep_punct:
+                    line = line.translate(_trans)
+                tokens = line.split()
                 for i in range(len(tokens) - size + 1):
                     ngram = ' '.join(tokens[i:(i+size)])
                     if ngram not in result:
