@@ -10,6 +10,7 @@ def main() -> None:
     extract_block(subparsers.add_parser('extract', help = "pull part of a thing into another"))
     transform_block(subparsers.add_parser('transform', help = "transform one thing into another"))
     args = parser.parse_args()
+    print_args(args)
     args.run(args)
 
 def extract_block(parser: ArgumentParser) -> None:
@@ -20,6 +21,7 @@ def extract_block(parser: ArgumentParser) -> None:
         parser.add_argument('-dest', type = pathlib.Path, required = True, help = 'The folder to store the converted CSV file')
         parser.add_argument('-fields',  type = utils.csv_list, default = 'id', help = 'The names of the fields to extract')
         parser.set_defaults(run = run)
+        parser.set_defaults(cmd = 'extract jsonl_to_csv')
     subparsers = parser.add_subparsers(help = 'sub-commands')
     jsonl_to_csv(subparsers.add_parser('jsonl_to_csv', help = "Pull fields from every JSON object in a JSONL file into a CSV file"))
 
@@ -36,8 +38,16 @@ def transform_block(parser: ArgumentParser) -> None:
         parser.add_argument('-keep_case', action = 'store_true', help = 'Keeps the casing of the fields as-is before converting to tokens')
         parser.add_argument('-keep_punct', action = 'store_true', help = 'Keeps all punctuation of the fields as-is before converting to tokens')
         parser.set_defaults(run = run)
+        parser.set_defaults(cmd = 'transform ngram')
     subparsers = parser.add_subparsers(help = 'sub-commands')
     ngram(subparsers.add_parser('ngram', help = "Counts the n-grams in a JSONL file"))
+
+def print_args(args: Namespace) -> None:
+    print(f'--- {args.cmd} ---')
+    for key in args.__dict__.keys():
+        if key not in ['cmd', 'run']:
+            print(f'{key}: {args.__dict__[key]}')
+    print('---------')
 
 if __name__ == "__main__":
     sys.exit(main())
