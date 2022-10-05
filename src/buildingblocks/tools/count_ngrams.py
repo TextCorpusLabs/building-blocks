@@ -64,7 +64,7 @@ def count_ngrams(source: pathlib.Path, dest: pathlib.Path, fields: t.List[str], 
     chunks = list(chunks)
     chunk = _merge_ngram_chunks(chunks, cache_dir, 1)
     ngrams = _read_ngram_chunk(chunk)
-    ngrams = u.progress_overlay(ngrams, 'Reading n-grams')
+    ngrams = u.progress_overlay(ngrams, 'Reviewing N-Grams #')
     ngrams = _keep_top_ngrams(ngrams, top)    
     ngrams = sorted(ngrams, key = lambda ng: ng.count, reverse = True)
     _write_ngrams(ngrams, dest, size)    
@@ -116,6 +116,7 @@ def _merge_ngram_chunks(chunks: t.List[pathlib.Path], cache_dir: pathlib.Path, s
     widgets = ['N-Gram Chunks Left ', pb.Counter(), ' ', pb.Timer(), ' ', pb.BouncingBar(marker = '.', left = '[', right = ']')]
     with pb.ProgressBar(widgets = widgets, initial_value = len(chunks)) as bar:
         with mp.Pool() as pool:
+            bar.update(len(chunks), force = True)            
             while len(chunks) > 1:
                 pairs = (pair for pair in _pair_ngram_chunks(chunks))
                 args = (_merge_arg(p[0], p[1], cache_dir) for p in pairs)
