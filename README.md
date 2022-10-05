@@ -20,7 +20,7 @@ You can install the package using the following steps:
 1. `pip` install using an _admin_ prompt.
    ```{ps1}
    pip uninstall buildingblocks
-   pip install -v git+https://github.com/TextCorpusLabs/building-blocks.git
+   python -OO -m pip install -v git+https://github.com/TextCorpusLabs/building-blocks.git
    ```
 
 ## Run
